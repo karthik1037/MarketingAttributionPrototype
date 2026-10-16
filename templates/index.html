@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>Team 3 Marketing Attribution</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="container">
+        <h1>Welcome to Our Store</h1>
+        <p>Team 3 - Marketing Attribution Prototype</p>
+
+        {% if channel %}
+        <div class="notice">
+            You arrived through:
+            <strong>{{ channel }}</strong>
+        </div>
+        {% endif %}
+
+        <h2>Explore Our Marketing Channels</h2>
+
+        <div class="channels">
+            {% for code, name in channels.items() %}
+            <a class="channel"
+               href="{{ url_for('home', utm_source=code) }}">
+                {{ name }}
+            </a>
+            {% endfor %}
+        </div>
+
+        <p class="footer">
+            Academic research prototype.
+        </p>
+    </main>
+</body>
+</html>
