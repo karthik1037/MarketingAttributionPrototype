@@ -102,5 +102,9 @@ def checkout():
 def attribution_api():
     return jsonify(calculate_attribution())
 
+@app.route("/admin/dashboard")
+def admin_dashboard():
+    return render_template("dashboard.html")
+
 if __name__ == "__main__":
     app.run(debug=True)

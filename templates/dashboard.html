@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Bonfire Marketing Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='dashboard.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"
+            defer></script>
+    <script src="{{ url_for('static', filename='dashboard.js') }}"
+            defer></script>
+</head>
+
+<body>
+    <main class="dashboard">
+        <header>
+            <h1>Bonfire Pepper Co.</h1>
+            <p>Marketing Attribution Dashboard</p>
+        </header>
+
+        <div id="error-message" role="alert"></div>
+
+        <section class="metrics">
+            <article class="metric">
+                <h3>Total Revenue</h3>
+                <p id="total-revenue">—</p>
+            </article>
+
+            <article class="metric">
+                <h3>Total Orders</h3>
+                <p id="total-orders">—</p>
+            </article>
+
+            <article class="metric">
+                <h3>Attributed Orders</h3>
+                <p id="attributed-orders">—</p>
+            </article>
+
+            <article class="metric">
+                <h3>Unattributed Revenue</h3>
+                <p id="unattributed-revenue">—</p>
+            </article>
+        </section>
+
+        <section class="chart-card">
+            <h2>Attribution Model Comparison</h2>
+            <p>
+                Revenue credited to each marketing channel
+                under three attribution models.
+            </p>
+            <div class="chart-container">
+                <canvas id="attribution-chart"></canvas>
+            </div>
+        </section>
+
+        <section class="chart-card">
+            <h2>Revenue Attribution Details</h2>
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Channel</th>
+                            <th>First-Touch</th>
+                            <th>Last-Touch</th>
+                            <th>Linear</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attribution-table"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
