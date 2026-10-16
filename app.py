@@ -1,11 +1,13 @@
-from flask import Flask, render_template, request, session, jsonify
+from attribution import calculate_attribution
 from database import (
     initialize_database,
     save_visit,
     initialize_orders,
     save_order
 )
+
 import uuid
+from flask import Flask, render_template, request, session, jsonify
 
 app = Flask(__name__)
 
@@ -95,5 +97,10 @@ def checkout():
         "total": total_amount,
         "message": "Demo order saved successfully."
     })
+    
+@app.route("/api/attribution")
+def attribution_api():
+    return jsonify(calculate_attribution())
+
 if __name__ == "__main__":
     app.run(debug=True)
