@@ -49,3 +49,28 @@ def save_visit(visitor_id, channel):
             (visitor_id, channel)
         )
 
+def initialize_orders():
+    with get_connection() as connection:
+        connection.execute("""
+            CREATE TABLE IF NOT EXISTS orders (
+                order_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                visitor_id TEXT NOT NULL,
+                total_amount REAL NOT NULL,
+                ordered_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (visitor_id)
+                    REFERENCES visitors(visitor_id)
+            )
+        """)
+
+
+def save_order(visitor_id, total_amount):
+    with get_connection() as connection:
+        cursor = connection.execute(
+            """
+            INSERT INTO orders (visitor_id, total_amount)
+            VALUES (?, ?)
+            """,
+            (visitor_id, total_amount)
+        )
+        return cursor.lastrowid
+
