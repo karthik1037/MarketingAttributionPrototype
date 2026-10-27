@@ -216,3 +216,15 @@ button {
     color: #1E1410;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
+nav a {
+    text-decoration: none;
+    color: inherit;
+}
+
+nav a:hover {
+    color: var(--ember);
+}

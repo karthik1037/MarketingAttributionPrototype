@@ -136,7 +136,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: JSON.stringify({
                     items: cart.map(item => ({
                         name: item.name
-                    }))
+                    })),
+                    survey_source:
+                        document.querySelector(".opt.on")
+                            ?.textContent.trim() || null
                 })
             });
 

@@ -63,14 +63,31 @@ def initialize_orders():
         """)
 
 
-def save_order(visitor_id, total_amount):
+def save_order(visitor_id, total_amount, survey_source=None):
     with get_connection() as connection:
         cursor = connection.execute(
             """
-            INSERT INTO orders (visitor_id, total_amount)
-            VALUES (?, ?)
+            INSERT INTO orders
+                (visitor_id, total_amount, survey_source)
+            VALUES (?, ?, ?)
             """,
-            (visitor_id, total_amount)
+            (visitor_id, total_amount, survey_source)
         )
+
         return cursor.lastrowid
+
+def add_survey_column():
+    with get_connection() as connection:
+        columns = [
+            row["name"]
+            for row in connection.execute(
+                "PRAGMA table_info(orders)"
+            )
+        ]
+
+        if "survey_source" not in columns:
+            connection.execute("""
+                ALTER TABLE orders
+                ADD COLUMN survey_source TEXT
+            """)
 

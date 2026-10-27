@@ -4,12 +4,29 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head><body>
 
-<div class="ref">👋 Welcome, friend of <b>@chilichelle</b>! Your code <code>CHELLE10</code> is applied: 10% off your first order.</div>
+{% if promotion %}
+<div class="ref">
+    👋 {{ promotion.message }}
+    Use code
+    <code>{{ promotion.code }}</code>
+    for {{ promotion.description }}.
+</div>
+{% else %}
+<div class="ref">
+    🌶 Welcome to Bonfire Pepper Co.!
+    Discover our small-batch hot sauces.
+</div>
+{% endif %}
 
 <div class="w">
 <nav>
   <div class="logo"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="#D9481F"/><path d="M20 8c3 5 9 8 9 15a9 9 0 0 1-18 0c0-4 2-6 4-8 0 3 1 5 3 5-1-5 0-8 2-12z" fill="#F2B134"/></svg>Bonfire Pepper Co.</div>
-  <ul><li>Shop</li><li>Heat guide</li><li>Find us at markets</li><li>Our story</li></ul>
+  <ul>
+  <li><a href="#products">Shop</a></li>
+  <li><a href="#products">Heat guide</a></li>
+  <li><a href="#markets">Find us at markets</a></li>
+  <li><a href="#story">Our story</a></li>
+</ul>
   <div class="cart">Cart <span>0</span></div>
 </nav>
 
@@ -54,7 +71,7 @@
   </div>
 </div></section>
 
-<section><div class="w market">
+<section id="markets"><div class="w market">
   <div class="mcard">
     <div><span class="badge" style="background:#F2B134;color:#1E1410">Every Saturday</span><h2 style="margin-top:14px">Come taste them all at the booth</h2><p>Riverside Farmers Market · 8am – 1pm</p><p>Booth 14, look for the orange tent. Free samples, always.</p></div>
     <div class="qr"><svg width="120" height="120" viewBox="0 0 21 21" shape-rendering="crispEdges" id="qr"></svg><div style="margin-top:6px">Scan for $5 off</div></div>
