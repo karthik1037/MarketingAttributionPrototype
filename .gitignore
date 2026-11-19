@@ -1,6 +1,25 @@
+
+# Google Cloud credentials
+.env
+.env.*
+!.env.example
+credentials/
+service-account.json
+
+# Python environment
 .venv/
 __pycache__/
 *.pyc
-.env
+
+# Local databases
 *.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Generated Excel files
+exports/
+*.xlsx
+
+# Mac files
 .DS_Store

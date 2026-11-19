@@ -1,21 +1,55 @@
-from attribution import calculate_attribution
-from database import (
-    initialize_database,
-    save_visit,
-    initialize_orders,
-    save_order
-    
+
+import os
+import uuid
+
+from dotenv import load_dotenv
+from flask import (
+    Flask,
+    render_template,
+    request,
+    session,
+    jsonify,
+    send_file
 )
 
-import uuid
-from flask import Flask, render_template, request, session, jsonify
-from database import add_survey_column
+from attribution import calculate_attribution
+from excel_export import export_workbook
+from google_sheets import sync_touchpoints
+
+from database import (
+    initialize_database,
+    initialize_orders,
+    add_survey_column,
+    save_visit,
+    save_order
+)
+
+from demo_checkout import (
+    checkout_bp,
+    initialize_demo_payments
+)
+
+load_dotenv()
 
 app = Flask(__name__)
 
-# Development only. Replace with an environment secret
-# before deploying the website publicly.
-app.secret_key = "temporary-development-secret"
+app.secret_key = os.environ.get(
+    "FLASK_SECRET_KEY",
+    "temporary-development-secret"
+)
+
+# Initialize database once
+initialize_database()
+initialize_orders()
+add_survey_column()
+
+# Initialize payment system once
+initialize_demo_payments()
+
+
+# Register payment routes once
+app.register_blueprint(checkout_bp)
+
 
 CHANNELS = {
     "paid_social": "Paid Social",
@@ -52,6 +86,7 @@ initialize_orders()
 add_survey_column()
 
 
+
 @app.route("/")
 def home():
     if "visitor_id" not in session:
@@ -60,13 +95,24 @@ def home():
     source = request.args.get("utm_source", "").lower()
 
     channel = CHANNELS.get(source)
-    
     promotion = PROMOTIONS.get(source)
 
-    # Record a touchpoint only when the URL contains
-    # a recognized marketing channel.
+    # Record marketing touchpoint
     if channel:
         save_visit(session["visitor_id"], source)
+
+        # Automatically sync to Google Sheets
+        try:
+            synced = sync_touchpoints()
+            app.logger.info(
+                "Google Sheets: %s new touchpoints synced",
+                synced
+            )
+        except Exception:
+            app.logger.exception(
+                "Google Sheets sync failed. "
+                "Visit remains saved in SQLite."
+            )
 
     return render_template(
         "index.html",
@@ -74,6 +120,7 @@ def home():
         channels=CHANNELS,
         promotion=promotion
     )
+
 
 PRODUCT_PRICES = {
     "Smoked Habanero": 1199,
@@ -157,13 +204,30 @@ def checkout():
     })
 
     
+
 @app.route("/api/attribution")
 def attribution_api():
     return jsonify(calculate_attribution())
+
 
 @app.route("/admin/dashboard")
 def admin_dashboard():
     return render_template("dashboard.html")
 
+
+# Excel export route
+@app.route("/admin/export-excel")
+def download_excel():
+    excel_path = export_workbook()
+
+    return send_file(
+        excel_path,
+        as_attachment=True,
+        download_name="Marketing_Attribution_Report.xlsx"
+    )
+
+
+# Always keep this at the very bottom
 if __name__ == "__main__":
     app.run(debug=True)
+
