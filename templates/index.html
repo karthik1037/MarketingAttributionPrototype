@@ -27,8 +27,18 @@
   <li><a href="#markets">Find us at markets</a></li>
   <li><a href="#story">Our story</a></li>
 </ul>
-  <div class="cart">Cart <span>0</span></div>
+  
+  <div class="cart">
+    Cart <span>0</span>
+  </div>
+
+  <a href="{{ url_for('demo_checkout.payment_page') }}"
+     class="btn p"
+     style="text-decoration:none; margin-left:12px;">
+    Checkout →
+  </a>
 </nav>
+
 
 <div class="hero">
   <div>
